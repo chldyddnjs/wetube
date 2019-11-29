@@ -5,12 +5,12 @@
 ## page:
 
 - [ ] Home page 
-- [x] join
-- [x] login
-- [x] search
-- [ ] user detail
-- [ ] editprofile
-- [ ] change password
-- [ ] upload
-- [ ] video Detail
-- [ ] edit video
+- [✔] join
+- [✔] login
+- [✔] search
+- [] user detail
+- [✔] editprofile
+- [✔] change password
+- [✔] upload
+- [✔] video Detail
+- [✔] edit videow
