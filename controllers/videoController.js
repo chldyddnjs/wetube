@@ -2,7 +2,7 @@ import routes from "../routes";
 import Video from "../models/Video";
 export const home = async (req, res) => {
     try{
-    const videos = await Video.find({});
+    const videos = await Video.find({}).sort( {_id : -1} );
     res.render("home",{ pageTitle : "Home", videos});
     }catch(error){
         console.log(error);
@@ -14,7 +14,7 @@ export const search = (req,res) => {
         query: { term:searchingBy}
     } = req;
     // const searchingBy = req.query.term;
-    res.render("search",{ pageTitle : "Search", searchingBy:searchingBy});
+    res.render("search",{ pageTitle : "Search", searchingBy, videos});
 };
 
 export const getUpload = (req,res) => 
@@ -42,8 +42,8 @@ export const videoDetail = async(req, res) => {
         params: { id }
     }=req;
     try{
-        const video = await Video.findById(id);
-        res.render("videoDetail",{ pageTitle : "Video Detail", video});
+        const video = await Video.findOne({_id:id});
+        res.render("videoDetail",{ pageTitle : video.title, video});
     }catch(error){
         console.log(error);
         res.redirect(routes.home);
@@ -55,7 +55,7 @@ export const getEditVideo = async(req, res) => {
         params: { id }
     } = req;
     try {
-        const video = await Video.findById(id);
+        const video = await Video.findOne({_id:id});
         res.render("editVideo",{pageTitle:`Edit ${video.title}`, video});
     } catch (error) {
         res.redirect(routes.home);
@@ -75,5 +75,13 @@ export const postEditVideo = async (req, res) => {
     }
   };
 
-export const deletVideo = (req,res) => 
-    res.render("delet Video",{ pageTitle : " Delete Video"});
+export const deletVideo = async(req,res) => {
+    const {
+        params: {id}
+    } = req;
+    try{
+        await Video.findOneAndRemove({ _id : id });
+    }catch(error){}
+        res.redirect(routes.home);
+    
+}
