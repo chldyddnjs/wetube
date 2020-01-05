@@ -4,13 +4,21 @@ const ExtractCSS = require("extract-text-webpack-plugin");
 
 const MODE = process.env.WEBPACK_ENV;
 const ENTRY_FILE = path.resolve(__dirname,"assets","js","main.js");
-const OUPUT_DIR = path.join(___dirname,"static");
+const OUPUT_DIR = path.join(__dirname,"static");
 
 const config ={
-    entry: ENTRY_FILE, //어디에서 왔는지 경로를 나타냄
+    entry: ["@babel/polyfill",ENTRY_FILE], //어디에서 왔는지 경로를 나타냄
     mode:MODE,
     module:{
         rules: [
+            {
+                test: /\.(js)$/,
+                use: [
+                    {
+                    loader : "babel-loader"
+                    }
+                ]
+            },
             {
                 test:/\.(scss)$/, //정규표현식  scss를 모두찾아 준다
                 use: ExtractCSS.extract([
@@ -20,8 +28,8 @@ const config ={
                 {
                     loader:"postcss-loader",//css 호환성 해결
                     options:{
-                        plugin() {
-                            return [autoprefixer({ browsers : " cover 99.5%" })];
+                        plugins() {
+                            return [autoprefixer({ Browserslist : " cover 99.5%" })];
                         }
                     }
                 },
@@ -36,7 +44,7 @@ const config ={
     },
     output: {
         path : OUPUT_DIR,
-        filename : "[name].[format]"
+        filename : "[name].js"
     },  //경로를 어디에 넣을것인가를 의미
     plugins:[new ExtractCSS("style.css")]
 };

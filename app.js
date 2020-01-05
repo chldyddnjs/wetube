@@ -10,14 +10,15 @@ import videoRouter  from "./routers/videoRouter";
 import globalRouter from "./routers/globalRouter";
 import routes from "./routes";
 import { localsMiddleware } from "./middlewares";
-import MongoStore from "connect-mongo";
 import mongoose from "mongoose";
+import MongoStore from "connect-mongo";
+
 
 import "./passport";
 
 const app = express();
 
-const CokieStore = MongoStore();
+const CokieStore = MongoStore(session);
 console.log(process.env.COOKIE_SECRET);
 
 app.use(helmet());
@@ -32,7 +33,7 @@ app.use(session({
     secret : process.env.COOKIE_SECRET,
     resave:true,
     saveUninitialized:false,
-    store: new CokieStore({mongooseConnection:mongoose.connection})
+    store: new CokieStore( { mongooseConnection : mongoose.connection } )
  }));
 app.use(passport.initialize());
 app.use(passport.session());
